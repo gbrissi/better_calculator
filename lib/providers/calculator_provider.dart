@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class CalculatorProvider extends ChangeNotifier {
-  String formattedExpression = "";
-  // final evaluator = const ExpressionEvaluator();
-  // Expression get expression => Expression.parse(formattedExpression);
-  // get expressionResult => evaluator.eval(expression); 
+  final Parser p = Parser();
+  final ContextModel cm = ContextModel();
+
+  // Starts with empty value.
+  String calcInput = "";
+  Expression get exp => p.parse(calcInput);
+  double get calcResult => exp.evaluate(EvaluationType.REAL, cm);
 
   void addCharacterToCalc(String char) {
-    formattedExpression += char;
+    print("Input: $calcInput, $char");
+    calcInput += char;
+    print("CalcInput: $calcInput");
     notifyListeners();
   }
-
-  // TODO: Evaluate in Widget. Evaluate expression
-  // var r = evaluator.eval(expression, context);
 }
