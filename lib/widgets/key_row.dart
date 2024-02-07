@@ -15,7 +15,7 @@ class KeyRow extends StatelessWidget {
           .map(
             (key) => Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(6),
                 child: key,
               ),
             ),

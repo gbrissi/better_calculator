@@ -1,5 +1,6 @@
 import 'package:better_calculator/providers/calculator_provider.dart';
-import 'package:better_calculator/services/ColorUtils.dart';
+import 'package:better_calculator/services/color_utils.dart';
+import 'package:better_calculator/services/regex_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -14,10 +15,12 @@ class CalculatorKey extends StatefulWidget {
     super.key,
     String? cLabel,
     this.iconRepresentation,
+    this.customTapBehavior,
     required this.logicalKey,
   }) : label = cLabel ?? logicalKey.keyLabel;
 
   final LogicalKeyboardKey logicalKey;
+  final void Function()? customTapBehavior;
   final String label;
   final IconData? iconRepresentation;
 
@@ -30,10 +33,11 @@ class _CalculatorKeyState extends State<CalculatorKey> {
   final GlobalKey _calcKey = GlobalKey();
   final GlobalKey _inkWellKey = GlobalKey();
   final _inkWellController = MaterialStatesController();
-  final RegExp digitRegex = RegExp(r'\d');
 
-  KeyType get _keyType =>
-      digitRegex.hasMatch(_keyChar) ? KeyType.number : KeyType.cOperator;
+  KeyType get _keyType => RegexUtils.numberRegExp.hasMatch(_keyChar)
+      ? KeyType.number
+      : KeyType.cOperator;
+      
   String get _keyLabel => widget.label;
   String get _keyChar => widget.logicalKey.keyLabel;
   Color get _buttonColor => _keyType == KeyType.number
@@ -41,6 +45,9 @@ class _CalculatorKeyState extends State<CalculatorKey> {
       : Theme.of(context).colorScheme.secondary;
   Color get _textColor => ColorUtils.getAdaptiveTextColor(_buttonColor);
   double _keyHeight = 0;
+
+  void Function() get _onTapBehavior =>
+      widget.customTapBehavior ?? _updateExpression;
 
   void _updateExpression() {
     print("Button pressed: ${widget.logicalKey.keyLabel}, $_keyChar");
@@ -69,7 +76,7 @@ class _CalculatorKeyState extends State<CalculatorKey> {
   Future<void> _listenKeyEvent(RawKeyEvent event) async {
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == widget.logicalKey) {
-        _updateExpression();
+        _onTapBehavior();
       }
     }
   }
@@ -79,7 +86,7 @@ class _CalculatorKeyState extends State<CalculatorKey> {
           widget.iconRepresentation,
           color: _textColor,
           weight: 1000,
-          size: _keyHeight / 2.5,
+          size: _keyHeight / 3,
         )
       : Text(
           _keyLabel,
@@ -94,14 +101,14 @@ class _CalculatorKeyState extends State<CalculatorKey> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final double keySize = constraints.maxHeight < constraints.maxWidth
-            ? constraints.maxHeight
-            : constraints.maxWidth;
-            
+        // final double keySize = constraints.maxHeight < constraints.maxWidth
+        //     ? constraints.maxHeight
+        //     : constraints.maxWidth;
+
         return SizedBox(
           key: _calcKey,
-          width: keySize,
-          height: keySize,
+          // width: keySize,
+          // height: keySize,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(999),
             child: Material(
@@ -109,7 +116,7 @@ class _CalculatorKeyState extends State<CalculatorKey> {
               child: InkWell(
                 key: _inkWellKey,
                 statesController: _inkWellController,
-                onTap: _updateExpression,
+                onTap: _onTapBehavior,
                 child: Center(
                   child: _keyRepresentation,
                 ),

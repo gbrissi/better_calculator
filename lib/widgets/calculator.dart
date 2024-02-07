@@ -1,124 +1,79 @@
-import 'package:better_calculator/widgets/calculator_key.dart';
-import 'package:better_calculator/widgets/key_row.dart';
-import 'package:better_calculator/widgets/title_bar.dart';
+import 'package:better_calculator/providers/drawer_provider.dart';
+import 'package:better_calculator/widgets/calc_digits.dart';
+import 'package:better_calculator/widgets/custom_drawer_button.dart';
+import 'package:better_calculator/widgets/shell.dart';
+import 'package:better_calculator/widgets/side_panel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
-import 'calc_keys_column.dart';
 import 'calc_panel.dart';
 
-class Calculator extends StatelessWidget {
+class Calculator extends StatefulWidget {
   const Calculator({super.key});
 
   @override
+  State<Calculator> createState() => _CalculatorState();
+}
+
+class _CalculatorState extends State<Calculator> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          const TitleBar(),
-          Expanded(
-            child: Column(
-              children: [
-                const Expanded(
-                  flex: 18,
-                  child: CalcPanel(),
+    return Shell(
+      child: Selector<DrawerProvider, bool>(
+        selector: (_, provider) => provider.isOpen,
+        builder: (_, isOpen, __) {
+          return Row(
+            children: [
+              const Expanded(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: 18,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 12),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.end,
+                                      children: [
+                                        CDrawerButton(),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: CalcPanel(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 39,
+                            child: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: CalcDigits(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  flex: 39,
-                  child: CalcKeysColumn(
-                    keyRows: [
-                      KeyRow(
-                        keys: [
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.escape,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.parenthesisLeft,
-                            cLabel: "()",
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.percent,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.slash,
-                          ),
-                        ],
-                      ),
-                      KeyRow(
-                        keys: [
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.digit7,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.digit8,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.digit9,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.asterisk,
-                          ),
-                        ],
-                      ),
-                      KeyRow(
-                        keys: [
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.digit4,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.digit5,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.digit6,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.minus,
-                            iconRepresentation: Icons.remove,
-                          ),
-                        ],
-                      ),
-                      KeyRow(
-                        keys: [
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.digit1,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.digit2,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.digit3,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.add,
-                            iconRepresentation: Icons.add,
-                          ),
-                        ],
-                      ),
-                      KeyRow(
-                        keys: [
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.digit0,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.comma,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.backspace,
-                            iconRepresentation: Icons.backspace,
-                          ),
-                          CalculatorKey(
-                            logicalKey: LogicalKeyboardKey.equal,
-                            // iconRepresentation: Icons.add,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+              ),
+              isOpen
+                  ? const Expanded(
+                      child: SidePanel(),
+                    )
+                  : null,
+            ].whereType<Widget>().toList(),
+          );
+        },
       ),
     );
   }
