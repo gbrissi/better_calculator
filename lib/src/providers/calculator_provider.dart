@@ -1,4 +1,3 @@
-
 import 'package:better_calculator/src/extensions/double_extension.dart';
 import 'package:better_calculator/src/extensions/string_extension.dart';
 import 'package:flutter/material.dart';

@@ -35,8 +35,8 @@ class _CalcDigitsState extends State<CalcDigits> {
               customTapBehavior: _controller.addRoundedBrackets,
             ),
             CalculatorKey(
-              logicalKey: LogicalKeyboardKey.percent,
-              iconRepresentation: FontAwesomeIcons.percent,
+              logicalKey: LogicalKeyboardKey.caret, // caret
+              cLabel: "^",
             ),
             CalculatorKey(
               logicalKey: LogicalKeyboardKey.slash,
@@ -101,7 +101,8 @@ class _CalcDigitsState extends State<CalcDigits> {
               logicalKey: LogicalKeyboardKey.digit0,
             ),
             CalculatorKey(
-              logicalKey: LogicalKeyboardKey.comma, // Add "." as a key to press aswell.
+              logicalKey:
+                  LogicalKeyboardKey.comma, // Add "." as a key to press aswell.
               customTapBehavior: () => _controller.addCharactersToCalc("."),
             ),
             CalculatorKey(
