@@ -1,9 +1,11 @@
-import 'package:better_calculator/providers/calculator_provider.dart';
-import 'package:better_calculator/services/color_utils.dart';
-import 'package:better_calculator/services/regex_utils.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/calculator_provider.dart';
+import '../services/color_utils.dart';
+import '../services/regex_utils.dart';
 
 enum KeyType {
   cOperator,

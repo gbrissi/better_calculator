@@ -1,6 +1,8 @@
-import 'package:better_calculator/providers/history_provider.dart';
-import 'package:better_calculator/widgets/calc_history_card.dart';
+
 import 'package:flutter/material.dart';
+
+import '../providers/history_provider.dart';
+import 'calc_history_card.dart';
 
 class CalcHistorySection extends StatefulWidget {
   const CalcHistorySection({
@@ -25,7 +27,7 @@ class _CalcHistorySectionState extends State<CalcHistorySection> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Text(
-            "January 30th, 2024",
+            widget.calcsHistory.date.stringify(),
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w300,

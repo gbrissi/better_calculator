@@ -1,5 +1,6 @@
-import 'package:better_calculator/widgets/calculator_key.dart';
 import 'package:flutter/material.dart';
+
+import 'calculator_key.dart';
 
 class KeyRow extends StatelessWidget {
   const KeyRow({

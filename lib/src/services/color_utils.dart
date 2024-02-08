@@ -1,6 +1,4 @@
-import 'dart:ui';
-
-import 'package:better_calculator/extensions/color_extension.dart';
+import 'package:better_calculator/src/extensions/color_extension.dart';
 import 'package:flutter/material.dart';
 
 class ColorUtils {

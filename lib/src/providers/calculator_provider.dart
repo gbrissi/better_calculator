@@ -1,9 +1,10 @@
-import 'package:better_calculator/extensions/double_extension.dart';
-import 'package:better_calculator/extensions/string_extension.dart';
-import 'package:better_calculator/services/regex_utils.dart';
+
+import 'package:better_calculator/src/extensions/double_extension.dart';
+import 'package:better_calculator/src/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
+import '../services/regex_utils.dart';
 import 'history_provider.dart';
 
 class EvaluationResult {
@@ -16,7 +17,6 @@ class EvaluationResult {
   });
 }
 
-// TODO: Add precision to double by adding a lib.
 class CalculatorProvider extends ChangeNotifier {
   HistoryProvider? _historyProvider;
   final Parser p = Parser();
@@ -45,7 +45,7 @@ class CalculatorProvider extends ChangeNotifier {
     final int curTextLength = viewInput.length;
     final int lengthDiff = curTextLength - oldTextLength;
     final int latestCursorPosition = cursorPosition;
-    
+
     // Update text value and keep old position updated.
     inputController.text = viewInput;
     inputController.selection = TextSelection.collapsed(
@@ -116,7 +116,6 @@ class CalculatorProvider extends ChangeNotifier {
     if (_isSetResultError) _isSetResultError = false;
     userInput = _inputDefaultFiltering(input);
 
-
     notifyListeners();
   }
 
@@ -130,9 +129,9 @@ class CalculatorProvider extends ChangeNotifier {
 
   String _inputDefaultFiltering(input) {
     late String userInput;
-    userInput = _removeDuplicatedDots(input);
-    userInput = _removeDuplicateOperators(input);
-    // userInput = _removeLeadingZero(input);
+    userInput = _removeDuplicatedFloatingPoints(input);
+    // userInput = _removeDuplicatedOperators(input);
+    userInput = _removeLeadingZero(input);
 
     return userInput;
   }
@@ -163,7 +162,7 @@ class CalculatorProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _removeDuplicatedDots(String input) {
+  String _removeDuplicatedFloatingPoints(String input) {
     // Split the input string by "."
     List<String> parts = input.split(".");
 
@@ -260,36 +259,6 @@ class CalculatorProvider extends ChangeNotifier {
   String _generalViewNumberFormatting(String input) =>
       _replaceDecimalWithComma(input);
 
-  String _removeDuplicateOperators(String input) {
-    String result = "";
-    String lastOperator = "";
-
-    for (int i = 0; i < input.length; i++) {
-      String currentChar = input[i];
-      final bool isOperator = RegexUtils.operatorRegExp.hasMatch(currentChar);
-      final bool isParenthesis = currentChar == "(" || currentChar == ")";
-
-      // Check if the current character is an operator
-      if (isOperator && !isParenthesis) {
-        lastOperator = currentChar;
-      } else {
-        // If the current character is not an operator or a parenthesis, append the last operator (if any)
-        if (lastOperator.isNotEmpty) {
-          result += lastOperator;
-          lastOperator = ""; // Reset the last operator
-        }
-        result += currentChar;
-      }
-    }
-
-    // Append the last operator if any
-    if (lastOperator.isNotEmpty) {
-      result += lastOperator;
-    }
-
-    return result;
-  }
-
   String _removeLeadingZero(String input) {
     List<String> matches = RegexUtils.digitsRegExp
         .allMatches(input)
@@ -310,3 +279,35 @@ class CalculatorProvider extends ChangeNotifier {
     return matches.join("");
   }
 }
+
+// String _removeDuplicatedOperators(String input) {
+//   String result = "";
+//   String? lastOperator;
+
+//   for (int i = 0; i < input.length; i++) {
+//     String currentChar = input[i];
+//     final bool isOperator = RegexUtils.operatorRegExp.hasMatch(currentChar);
+//     final bool isParenthesis = currentChar == "(" || currentChar == ")";
+
+//     // If the current character is an operator and not a parenthesis
+//     print("Curr: $lastOperator, $currentChar, $result");
+//     // If the current character is an operator and not a parenthesis
+//     if (isOperator && !isParenthesis) {
+//       // If the last operator is not null and different from the current one, replace it
+//       if (lastOperator != null && currentChar != lastOperator) {
+//         result = result.substring(
+//             0, result.length - 1); // Remove the last added character
+//       }
+//       result += currentChar; // Add the current operator
+//       lastOperator = currentChar; // Update lastOperator
+//     } else {
+//       // If it's not an operator or parenthesis, add it to the result
+//       result += currentChar;
+//       // Reset lastOperator
+//       lastOperator = null;
+//     }
+//   }
+//   print("After: $result");
+
+//   return result;
+// }

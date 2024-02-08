@@ -1,7 +1,9 @@
-import 'package:better_calculator/providers/history_provider.dart';
-import 'package:better_calculator/widgets/calc_history_section.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/history_provider.dart';
+import 'calc_history_section.dart';
 
 class HistoryPanel extends StatelessWidget {
   const HistoryPanel({super.key});
@@ -10,7 +12,6 @@ class HistoryPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<HistoryProvider>(
       builder: (_, provider, __) {
-        print("Value changed");
         if (provider.calcHistories?.isNotEmpty ?? false) {
           return ListView.builder(
             shrinkWrap: true,

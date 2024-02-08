@@ -1,9 +1,9 @@
-import 'package:better_calculator/providers/custom_colors_provider.dart';
-import 'package:better_calculator/widgets/small_circular_button.dart';
+import 'package:better_calculator/src/widgets/small_circular_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/custom_colors_provider.dart';
 import '../providers/theme_provider.dart';
 
 class SelectColorOption extends StatefulWidget {

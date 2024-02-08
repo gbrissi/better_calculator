@@ -1,4 +1,4 @@
-import 'package:better_calculator/widgets/title_bar.dart';
+import 'package:better_calculator/src/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
 
 class Shell extends StatelessWidget {

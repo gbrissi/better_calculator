@@ -1,6 +1,7 @@
-import 'package:better_calculator/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/theme_provider.dart';
 
 class ThemeBuilder extends StatelessWidget {
   const ThemeBuilder({

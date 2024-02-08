@@ -1,14 +1,15 @@
-import 'package:better_calculator/providers/calculator_provider.dart';
-import 'package:better_calculator/providers/custom_colors_provider.dart';
-import 'package:better_calculator/providers/drawer_provider.dart';
-import 'package:better_calculator/providers/history_provider.dart';
-import 'package:better_calculator/providers/tab_provider.dart';
-import 'package:better_calculator/providers/theme_provider.dart';
-import 'package:better_calculator/widgets/calculator.dart';
-import 'package:better_calculator/widgets/theme_builder.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/calculator_provider.dart';
+import '../providers/custom_colors_provider.dart';
+import '../providers/drawer_provider.dart';
+import '../providers/history_provider.dart';
+import '../providers/tab_provider.dart';
+import '../providers/theme_provider.dart';
+import '../widgets/calculator.dart';
+import '../widgets/theme_builder.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

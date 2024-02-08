@@ -1,9 +1,9 @@
-import 'package:better_calculator/providers/calculator_provider.dart';
-import 'package:better_calculator/services/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/calculator_provider.dart';
 import '../providers/history_provider.dart';
+import '../services/color_utils.dart';
 import 'calc_history_card_button.dart';
 
 class CalcHistoryCard extends StatefulWidget {

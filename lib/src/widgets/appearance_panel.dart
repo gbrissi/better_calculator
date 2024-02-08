@@ -1,8 +1,8 @@
-import 'package:better_calculator/providers/custom_colors_provider.dart';
-import 'package:better_calculator/widgets/select_color_option.dart';
+import 'package:better_calculator/src/widgets/select_color_option.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/custom_colors_provider.dart';
 import '../providers/theme_provider.dart';
 import '../services/preset_colors.dart';
 import 'color_option.dart';

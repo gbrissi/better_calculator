@@ -1,5 +1,6 @@
-import 'package:better_calculator/services/shared_prefs.dart';
 import 'package:flutter/material.dart';
+
+import '../services/shared_prefs.dart';
 
 class CustomColorsProvider extends ChangeNotifier {
   final int _customColorsLimit = 4;
@@ -20,7 +21,7 @@ class CustomColorsProvider extends ChangeNotifier {
       await SharedPrefs.removeCustomColor(customColors.first);
       _customColors?.removeAt(0);
     }
-  
+
     await SharedPrefs.addCustomColor(color);
     _customColors = [...customColors, color];
     notifyListeners();

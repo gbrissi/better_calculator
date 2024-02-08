@@ -1,8 +1,9 @@
 import 'dart:ui';
 
-import 'package:better_calculator/services/shared_prefs.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+
+import '../services/shared_prefs.dart';
 
 class ThemeConfig {
   Color colorSeed;

@@ -1,5 +1,5 @@
-import 'package:better_calculator/widgets/row_separated.dart';
-import 'package:better_calculator/widgets/tab_button.dart';
+import 'package:better_calculator/src/widgets/row_separated.dart';
+import 'package:better_calculator/src/widgets/tab_button.dart';
 import 'package:flutter/material.dart';
 
 class TabProperties {

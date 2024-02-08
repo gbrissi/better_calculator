@@ -1,7 +1,7 @@
-import 'package:better_calculator/providers/calculator_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/calculator_provider.dart';
 
 class CalcTextField extends StatefulWidget {
   const CalcTextField({

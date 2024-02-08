@@ -1,12 +1,13 @@
-import 'package:better_calculator/providers/drawer_provider.dart';
-import 'package:better_calculator/widgets/calc_digits.dart';
-import 'package:better_calculator/widgets/custom_drawer_button.dart';
-import 'package:better_calculator/widgets/shell.dart';
-import 'package:better_calculator/widgets/side_panel.dart';
+
+import 'package:better_calculator/src/widgets/shell.dart';
+import 'package:better_calculator/src/widgets/side_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/drawer_provider.dart';
+import 'calc_digits.dart';
 import 'calc_panel.dart';
+import 'custom_drawer_button.dart';
 
 class Calculator extends StatefulWidget {
   const Calculator({super.key});

@@ -1,8 +1,8 @@
-import 'package:better_calculator/widgets/history_panel.dart';
-import 'package:better_calculator/widgets/tab_view.dart';
+import 'package:better_calculator/src/widgets/tab_view.dart';
 import 'package:flutter/material.dart';
 
 import 'appearance_panel.dart';
+import 'history_panel.dart';
 
 class SidePanel extends StatelessWidget {
   const SidePanel({super.key});

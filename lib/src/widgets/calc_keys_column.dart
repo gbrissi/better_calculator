@@ -1,5 +1,6 @@
-import 'package:better_calculator/widgets/key_row.dart';
 import 'package:flutter/material.dart';
+
+import 'key_row.dart';
 
 class CalcKeysColumn extends StatelessWidget {
   const CalcKeysColumn({

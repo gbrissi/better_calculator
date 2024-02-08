@@ -1,6 +1,6 @@
+import 'package:better_calculator/src/app/app.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'app.dart';
 
 void main() {
   runApp(

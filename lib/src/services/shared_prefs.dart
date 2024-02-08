@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:better_calculator/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers/history_provider.dart';
+import '../providers/theme_provider.dart';
 
 class SharedPrefs {
   static const String _adaptiveThemeStateKey = "adaptiveThemeState";
@@ -114,6 +114,7 @@ class SharedPrefs {
   static Future<List<CalcsHistory>?> getHistory() async {
     List<CalcsHistory>? history;
     final prefs = await _getPrefs();
+
     final String? calcsVal = prefs.getString(_calculationHistoryKey);
     if (calcsVal != null) {
       final List<String> decodedCalscVal = jsonDecode(calcsVal).cast<String>();
