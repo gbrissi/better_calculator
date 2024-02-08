@@ -17,7 +17,7 @@ The BetterCalculator is a simple calculator application built with [Flutter](htt
 
 ## Installation
 
-You can install the by accessing the [GitHub Releases](https://github.com/gbrissi/better_calculator/releases) section.
+You can install the BetterCalculator app by accessing the [GitHub Releases](https://github.com/gbrissi/better_calculator/releases) section.
 
 ## License
 
