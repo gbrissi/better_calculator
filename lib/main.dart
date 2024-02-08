@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 
 void main() {

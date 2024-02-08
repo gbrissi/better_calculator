@@ -1,8 +1,10 @@
 import 'package:better_calculator/providers/calculator_provider.dart';
+import 'package:better_calculator/providers/custom_colors_provider.dart';
 import 'package:better_calculator/providers/drawer_provider.dart';
 import 'package:better_calculator/providers/tab_provider.dart';
 import 'package:better_calculator/providers/theme_provider.dart';
 import 'package:better_calculator/widgets/calculator.dart';
+import 'package:better_calculator/widgets/theme_builder.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,20 +28,16 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => TabProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => CustomColorsProvider(),
+        ),
       ],
-      child: Consumer<ThemeProvider>(
-        builder: (_, provider, __) {
+      child: ThemeBuilder(
+        builder: (ThemeData themeData) {
           return MaterialApp(
             title: 'Better Calculator',
             debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              brightness: provider.curTheme.brightness,
-              colorScheme: ColorScheme.fromSeed(
-                brightness: provider.curTheme.brightness,
-                seedColor: provider.curTheme.colorSeed,
-              ),
-              useMaterial3: true,
-            ),
+            theme: themeData,
             home: ScrollConfiguration(
               behavior: MyCustomScrollBehavior(),
               child: const Calculator(),

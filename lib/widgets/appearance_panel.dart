@@ -1,3 +1,4 @@
+import 'package:better_calculator/providers/custom_colors_provider.dart';
 import 'package:better_calculator/widgets/select_color_option.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -67,21 +68,30 @@ class AppearancePanel extends StatelessWidget {
                             child: Text(
                               "Select your app color",
                               style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 16,
                               ),
                             ),
                           ),
-                          Wrap(
-                            spacing: 4,
-                            runSpacing: 4,
-                            children: List.from(
-                              [
-                                ...PresetColors.colors.map(
-                                  (e) => ColorOption(color: e),
+                          Consumer<CustomColorsProvider>(
+                            builder: (_, provider, __) {
+                              return Wrap(
+                                spacing: 4,
+                                runSpacing: 4,
+                                children: List.from(
+                                  [
+                                    ...PresetColors.colors.map(
+                                      (e) => ColorOption(color: e),
+                                    ),
+                                    ...provider.customColors.map(
+                                      (e) => ColorOption(
+                                        color: e,
+                                      ),
+                                    ),
+                                    const SelectColorOption()
+                                  ],
                                 ),
-                                const SelectColorOption()
-                              ],
-                            ),
+                              );
+                            },
                           ),
                         ],
                       ),

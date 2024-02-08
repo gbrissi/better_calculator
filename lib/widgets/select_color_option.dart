@@ -1,3 +1,4 @@
+import 'package:better_calculator/providers/custom_colors_provider.dart';
 import 'package:better_calculator/widgets/small_circular_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -14,6 +15,7 @@ class SelectColorOption extends StatefulWidget {
 
 class _SelectColorOptionState extends State<SelectColorOption> {
   late final _controller = context.read<ThemeProvider>();
+  late final _customColorsController = context.read<CustomColorsProvider>();
   late Color selectedColor = _controller.manualThemeCfg.colorSeed;
 
   void setSelectedColor(Color color) {
@@ -43,6 +45,7 @@ class _SelectColorOptionState extends State<SelectColorOption> {
               child: const Text('OK'),
               onPressed: () {
                 _controller.setThemeColor(selectedColor);
+                _customColorsController.addCustomColor(selectedColor);
                 Navigator.of(context).pop();
               },
             ),

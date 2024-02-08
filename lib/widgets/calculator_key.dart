@@ -37,20 +37,19 @@ class _CalculatorKeyState extends State<CalculatorKey> {
   KeyType get _keyType => RegexUtils.numberRegExp.hasMatch(_keyChar)
       ? KeyType.number
       : KeyType.cOperator;
-      
+
   String get _keyLabel => widget.label;
   String get _keyChar => widget.logicalKey.keyLabel;
+
+  Color get _textColor => ColorUtils.getAdaptiveTextColor(_buttonColor);
   Color get _buttonColor => _keyType == KeyType.number
       ? Theme.of(context).colorScheme.primary
       : Theme.of(context).colorScheme.secondary;
-  Color get _textColor => ColorUtils.getAdaptiveTextColor(_buttonColor);
-  double _keyHeight = 0;
 
   void Function() get _onTapBehavior =>
       widget.customTapBehavior ?? _updateExpression;
 
   void _updateExpression() {
-    print("Button pressed: ${widget.logicalKey.keyLabel}, $_keyChar");
     _controller.addCharacterToCalc(
       _keyChar,
     );
@@ -58,12 +57,7 @@ class _CalculatorKeyState extends State<CalculatorKey> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final double size = _calcKey.currentContext!.size!.width;
-      RawKeyboard.instance.addListener(_listenKeyEvent);
-      if (mounted) setState(() => _keyHeight = size);
-    });
-
+    RawKeyboard.instance.addListener(_listenKeyEvent);
     super.initState();
   }
 
@@ -81,17 +75,17 @@ class _CalculatorKeyState extends State<CalculatorKey> {
     }
   }
 
-  Widget get _keyRepresentation => widget.iconRepresentation != null
+  Widget _getKeyRepresentation(double size) => widget.iconRepresentation != null
       ? Icon(
           widget.iconRepresentation,
           color: _textColor,
           weight: 1000,
-          size: _keyHeight / 3,
+          size: size / 3,
         )
       : Text(
           _keyLabel,
           style: TextStyle(
-            fontSize: _keyHeight / 3,
+            fontSize: size / 3,
             fontWeight: FontWeight.bold,
             color: _textColor,
           ),
@@ -101,14 +95,8 @@ class _CalculatorKeyState extends State<CalculatorKey> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // final double keySize = constraints.maxHeight < constraints.maxWidth
-        //     ? constraints.maxHeight
-        //     : constraints.maxWidth;
-
         return SizedBox(
           key: _calcKey,
-          // width: keySize,
-          // height: keySize,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(999),
             child: Material(
@@ -118,7 +106,9 @@ class _CalculatorKeyState extends State<CalculatorKey> {
                 statesController: _inkWellController,
                 onTap: _onTapBehavior,
                 child: Center(
-                  child: _keyRepresentation,
+                  child: _getKeyRepresentation(
+                    constraints.maxWidth,
+                  ),
                 ),
               ),
             ),

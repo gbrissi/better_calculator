@@ -13,13 +13,14 @@ class ColorOption extends StatefulWidget {
 
 class _ColorOptionState extends State<ColorOption> {
   late final _controller = context.read<ThemeProvider>();
+  
   @override
   Widget build(BuildContext context) {
     return Selector<ThemeProvider, ThemeConfig>(
       selector: (_, provider) => provider.manualThemeCfg,
       builder: (_, theme, __) {
         return SmallCircularButton(
-          onTap: () => _controller.setThemeColor(widget.color),
+          onTap: () => _controller.setThemeColor(widget.color.withOpacity(1.0)),
           color: widget.color,
           isSelected: theme.colorSeed.value == widget.color.value,
         );

@@ -10,7 +10,7 @@ class PresetColors {
   static const Color indigo = Colors.indigo;
   static final Color purpleBlue = Color(
     int.parse("4B0082", radix: 16),
-  );
+  ).withOpacity(1.0);
 
   static final List<Color> colors = [
     red,

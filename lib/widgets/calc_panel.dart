@@ -1,5 +1,7 @@
 import 'package:better_calculator/services/color_utils.dart';
+import 'package:better_calculator/widgets/calc_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/calculator_provider.dart';
@@ -27,30 +29,58 @@ class _CalcPanelState extends State<CalcPanel> {
           ),
           child: Material(
             color: panelColor,
-            child: SizedBox(
-              width: double.infinity,
-              child: Scrollbar(
-                controller: _scrollController,
-                thumbVisibility: true,
-                child: SingleChildScrollView(
-                  controller: _scrollController,
-                  scrollDirection: Axis.horizontal,
-                  reverse: true,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        provider.viewInput,
-                        style: TextStyle(
-                          color: textColor,
-                          fontSize: 38,
-                          fontWeight: FontWeight.bold,
-                        ),
+            child: Stack(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Scrollbar(
+                    controller: _scrollController,
+                    thumbVisibility: true,
+                    child: SingleChildScrollView(
+                      controller: _scrollController,
+                      scrollDirection: Axis.horizontal,
+                      reverse: true,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: IntrinsicWidth(
+                                  child: CalcTextField(
+                                    // text: provider.viewInput,
+                                    textColor: textColor,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                provider.calcResultView,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+                if (provider.showParseError)
+                  const Text(
+                    "ERROR: Couldn't parse the current expression.",
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: Colors.red,
+                      overflow: TextOverflow.ellipsis,
+                      fontSize: 12,
+                    ),
+                  ),
+              ],
             ),
           ),
         );
