@@ -50,7 +50,7 @@ class _CalculatorKeyState extends State<CalculatorKey> {
       widget.customTapBehavior ?? _updateExpression;
 
   void _updateExpression() {
-    _controller.addCharacterToCalc(
+    _controller.addCharactersToCalc(
       _keyChar,
     );
   }

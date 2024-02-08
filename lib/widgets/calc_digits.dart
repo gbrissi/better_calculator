@@ -102,7 +102,7 @@ class _CalcDigitsState extends State<CalcDigits> {
             ),
             CalculatorKey(
               logicalKey: LogicalKeyboardKey.comma, // Add "." as a key to press aswell.
-              customTapBehavior: () => _controller.addCharacterToCalc("."),
+              customTapBehavior: () => _controller.addCharactersToCalc("."),
             ),
             CalculatorKey(
               logicalKey: LogicalKeyboardKey.backspace,

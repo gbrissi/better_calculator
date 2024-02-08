@@ -3,10 +3,6 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'app.dart';
 
 void main() {
-  // SharedPrefs issue, more information in: https://stackoverflow.com/questions/50687801/flutter-unhandled-exception-missingpluginexceptionno-implementation-found-for
-  // ignore: invalid_use_of_visible_for_testing_member
-  // SharedPreferences.setMockInitialValues({});
-
   runApp(
     const App(),
   );

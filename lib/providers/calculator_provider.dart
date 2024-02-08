@@ -1,3 +1,4 @@
+import 'package:better_calculator/extensions/double_extension.dart';
 import 'package:better_calculator/extensions/string_extension.dart';
 import 'package:better_calculator/services/regex_utils.dart';
 import 'package:flutter/material.dart';
@@ -43,8 +44,8 @@ class CalculatorProvider extends ChangeNotifier {
     final int oldTextLength = inputController.text.length;
     final int curTextLength = viewInput.length;
     final int lengthDiff = curTextLength - oldTextLength;
-
     final int latestCursorPosition = cursorPosition;
+    
     // Update text value and keep old position updated.
     inputController.text = viewInput;
     inputController.selection = TextSelection.collapsed(
@@ -101,7 +102,7 @@ class CalculatorProvider extends ChangeNotifier {
   String _formatCalcResult(double? value) {
     String stringValue = "";
     if (value == null) return stringValue;
-    stringValue = _generalViewNumberFormatting(value.toString());
+    stringValue = _generalViewNumberFormatting(value.toExact());
     stringValue = _removeUnnecessaryFloatingPoint(stringValue);
 
     return stringValue;
@@ -111,7 +112,15 @@ class CalculatorProvider extends ChangeNotifier {
       ? userInput.substring(userInput.length - 1, userInput.length)
       : userInput;
 
-  void addCharacterToCalc(String char) {
+  void setUserInput(String input) {
+    if (_isSetResultError) _isSetResultError = false;
+    userInput = _inputDefaultFiltering(input);
+
+
+    notifyListeners();
+  }
+
+  void addCharactersToCalc(String char) {
     if (_isSetResultError) _isSetResultError = false;
     userInput = userInput.insertCharAtPosition(char, cursorPosition);
     userInput = _inputDefaultFiltering(userInput);
@@ -133,7 +142,7 @@ class CalculatorProvider extends ChangeNotifier {
       final String oldInput = userInput;
 
       // Filter userInput to get the appropriated result.
-      userInput = calcResult?.toString() ?? "";
+      userInput = calcResult?.toExact() ?? "";
       userInput = _replaceDecimalWithComma(userInput);
       userInput = _inputDefaultFiltering(userInput);
       userInput = _removeUnnecessaryFloatingPoint(userInput);
@@ -183,7 +192,7 @@ class CalculatorProvider extends ChangeNotifier {
       char = closedRoundedBracket;
     }
 
-    addCharacterToCalc(char);
+    addCharactersToCalc(char);
   }
 
   void removeSelectedChar() {
@@ -248,7 +257,6 @@ class CalculatorProvider extends ChangeNotifier {
     return filteredInput;
   }
 
-  // TODO: _addDot
   String _generalViewNumberFormatting(String input) =>
       _replaceDecimalWithComma(input);
 
@@ -302,22 +310,3 @@ class CalculatorProvider extends ChangeNotifier {
     return matches.join("");
   }
 }
-
-
-// String _addDotToNumbers(String input) {
-//   const String splitChar = ",";
-//   final List<String> splitNumericalsTypes = input.split(splitChar);
-
-//   String integers = splitNumericalsTypes[0];
-//   int totalIntegersToCalc = integers.length;
-
-//   while (totalIntegersToCalc > 3) {
-//     totalIntegersToCalc = totalIntegersToCalc - 3;
-//     integers = integers.insertCharAtPosition(".", totalIntegersToCalc);
-//   }
-
-//   bool isDecimalsIncluded = splitNumericalsTypes.length > 1;
-//   if (!isDecimalsIncluded) return integers;
-//   final String decimals = splitNumericalsTypes[1];
-//   return "$integers$splitChar$decimals";
-// }

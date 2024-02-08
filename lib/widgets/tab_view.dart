@@ -64,7 +64,9 @@ class _PanelTabViewState extends State<PanelTabView> {
                     .toList(),
               ),
             ),
-            selectedTab.body,
+            Flexible(
+              child: selectedTab.body,
+            ),
           ],
         ),
       ),
