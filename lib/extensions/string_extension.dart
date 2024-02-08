@@ -21,4 +21,15 @@ extension StringExtension on String {
 
     return firstPart + charToAdd + secondPart;
   }
+
+  String removeCharAt(int index) {
+    if (index < 0 || index >= length) {
+      // Handle invalid index
+      return this;
+    }
+
+    List<String> chars = split(''); // Convert string to list of characters
+    chars.removeAt(index); // Remove character at the specified index
+    return chars.join(''); // Convert list back to string
+  }
 }

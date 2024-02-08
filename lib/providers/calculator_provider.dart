@@ -3,6 +3,8 @@ import 'package:better_calculator/services/regex_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
+import 'history_provider.dart';
+
 class EvaluationResult {
   final double? result;
   final bool isError;
@@ -15,17 +17,45 @@ class EvaluationResult {
 
 // TODO: Add precision to double by adding a lib.
 class CalculatorProvider extends ChangeNotifier {
+  HistoryProvider? _historyProvider;
   final Parser p = Parser();
   final ContextModel cm = ContextModel();
   bool _isSetResultError = false;
 
-  String userInput = "";
+  final TextEditingController inputController = TextEditingController();
+
+  int get cursorPosition => inputController.selection.baseOffset;
+  late String _userInput = inputController.text;
+  String get userInput => _userInput;
   String get viewInput => _filterInput(userInput);
+  set userInput(String value) {
+    _userInput = value;
+    _keepReactiveBehavior();
+  }
+
+  void setHistoryProvider(HistoryProvider provider) {
+    _historyProvider = provider;
+    notifyListeners();
+  }
+
+  void _keepReactiveBehavior() {
+    // Gets the char length diff between the new value and the old one.
+    final int oldTextLength = inputController.text.length;
+    final int curTextLength = viewInput.length;
+    final int lengthDiff = curTextLength - oldTextLength;
+
+    final int latestCursorPosition = cursorPosition;
+    // Update text value and keep old position updated.
+    inputController.text = viewInput;
+    inputController.selection = TextSelection.collapsed(
+      offset: latestCursorPosition + lengthDiff,
+    );
+  }
 
   EvaluationResult get _parseResult {
     try {
       return EvaluationResult(
-        result: p.parse(userInput).evaluate(
+        result: p.parse(_processStringToCalc(userInput)).evaluate(
               EvaluationType.REAL,
               cm,
             ),
@@ -54,6 +84,20 @@ class CalculatorProvider extends ChangeNotifier {
     return input;
   }
 
+  void moveCursorRight() {
+    if (cursorPosition < inputController.text.length) {
+      final newPosition = TextSelection.collapsed(offset: cursorPosition + 1);
+      inputController.selection = newPosition;
+    }
+  }
+
+  void moveCursorLeft() {
+    if (cursorPosition > 0) {
+      final newPosition = TextSelection.collapsed(offset: cursorPosition - 1);
+      inputController.selection = newPosition;
+    }
+  }
+
   String _formatCalcResult(double? value) {
     String stringValue = "";
     if (value == null) return stringValue;
@@ -68,10 +112,8 @@ class CalculatorProvider extends ChangeNotifier {
       : userInput;
 
   void addCharacterToCalc(String char) {
-    print("Result: $calcResult");
-
     if (_isSetResultError) _isSetResultError = false;
-    userInput += char;
+    userInput = userInput.insertCharAtPosition(char, cursorPosition);
     userInput = _inputDefaultFiltering(userInput);
 
     notifyListeners();
@@ -81,18 +123,30 @@ class CalculatorProvider extends ChangeNotifier {
     late String userInput;
     userInput = _removeDuplicatedDots(input);
     userInput = _removeDuplicateOperators(input);
-    userInput = _removeLeadingZero(input);
+    // userInput = _removeLeadingZero(input);
 
     return userInput;
   }
 
   void setResult() {
-    // TODO: Send result to History Provider.
     if (!_parseResult.isError) {
+      final String oldInput = userInput;
+
+      // Filter userInput to get the appropriated result.
       userInput = calcResult?.toString() ?? "";
       userInput = _replaceDecimalWithComma(userInput);
       userInput = _inputDefaultFiltering(userInput);
       userInput = _removeUnnecessaryFloatingPoint(userInput);
+
+      // Add the result to the HistoryProvider.
+      if (_historyProvider != null && oldInput != userInput) {
+        _historyProvider!.addHistory(
+          Calculation(
+            expression: oldInput,
+            result: userInput,
+          ),
+        );
+      }
     } else {
       _isSetResultError = true;
     }
@@ -113,11 +167,30 @@ class CalculatorProvider extends ChangeNotifier {
     return result;
   }
 
-  void addRoundedBrackets() => addCharacterToCalc("()");
+  void addRoundedBrackets() {
+    String openRoundedBracket = "(";
+    String closedRoundedBracket = ")";
+    late final String char;
 
-  void removeLastChar() {
+    bool isLastCharOpen = inputLastChar == openRoundedBracket;
+    int openOccur = userInput.countOccurrences(openRoundedBracket);
+    int closedOccur = userInput.countOccurrences(closedRoundedBracket);
+    bool isAllBracketsClosed = openOccur - closedOccur == 0;
+
+    if (isLastCharOpen || isAllBracketsClosed) {
+      char = openRoundedBracket;
+    } else {
+      char = closedRoundedBracket;
+    }
+
+    addCharacterToCalc(char);
+  }
+
+  void removeSelectedChar() {
     if (userInput.isNotEmpty) {
-      userInput = userInput.substring(0, userInput.length - 1);
+      userInput = userInput.removeCharAt(
+        cursorPosition - 1,
+      );
     }
 
     notifyListeners();
@@ -128,22 +201,27 @@ class CalculatorProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _addDotToNumbers(String input) {
-    const String splitChar = ",";
-    final List<String> splitNumericalsTypes = input.split(splitChar);
-
-    String integers = splitNumericalsTypes[0];
-    int totalIntegersToCalc = integers.length;
-
-    while (totalIntegersToCalc > 3) {
-      totalIntegersToCalc = totalIntegersToCalc - 3;
-      integers = integers.insertCharAtPosition(".", totalIntegersToCalc);
+  String _processStringToCalc(String input) {
+    List<String> result = [];
+    for (int i = 0; i < input.length; i++) {
+      if (input[i] == '(' &&
+          i - 1 >= 0 &&
+          !RegexUtils.operatorRegExp.hasMatch(
+            input[i - 1],
+          )) {
+        result.add('*(');
+      } else if (input[i] == ')' &&
+          i + 1 < input.length &&
+          !RegexUtils.operatorRegExp.hasMatch(
+            input[i + 1],
+          )) {
+        result.add(')*');
+      } else {
+        result.add(input[i]);
+      }
     }
 
-    bool isDecimalsIncluded = splitNumericalsTypes.length > 1;
-    if (!isDecimalsIncluded) return integers;
-    final String decimals = splitNumericalsTypes[1];
-    return "$integers$splitChar$decimals";
+    return result.join('');
   }
 
   String _replaceDecimalWithComma(String numberString) {
@@ -170,9 +248,9 @@ class CalculatorProvider extends ChangeNotifier {
     return filteredInput;
   }
 
-  String _generalViewNumberFormatting(String input) => _addDotToNumbers(
-        _replaceDecimalWithComma(input),
-      );
+  // TODO: _addDot
+  String _generalViewNumberFormatting(String input) =>
+      _replaceDecimalWithComma(input);
 
   String _removeDuplicateOperators(String input) {
     String result = "";
@@ -225,19 +303,21 @@ class CalculatorProvider extends ChangeNotifier {
   }
 }
 
-// String openRoundedBracket = "(";
-// String closedRoundedBracket = ")";
-// late final String char;
 
-// bool isLastCharOpen = inputLastChar == openRoundedBracket;
-// int openOccur = userInput.countOccurrences(openRoundedBracket);
-// int closedOccur = userInput.countOccurrences(closedRoundedBracket);
-// bool isAllBracketsClosed = openOccur - closedOccur == 0;
+// String _addDotToNumbers(String input) {
+//   const String splitChar = ",";
+//   final List<String> splitNumericalsTypes = input.split(splitChar);
 
-// if (isLastCharOpen || isAllBracketsClosed) {
-//   char = openRoundedBracket;
-// } else {
-//   char = closedRoundedBracket;
+//   String integers = splitNumericalsTypes[0];
+//   int totalIntegersToCalc = integers.length;
+
+//   while (totalIntegersToCalc > 3) {
+//     totalIntegersToCalc = totalIntegersToCalc - 3;
+//     integers = integers.insertCharAtPosition(".", totalIntegersToCalc);
+//   }
+
+//   bool isDecimalsIncluded = splitNumericalsTypes.length > 1;
+//   if (!isDecimalsIncluded) return integers;
+//   final String decimals = splitNumericalsTypes[1];
+//   return "$integers$splitChar$decimals";
 // }
-
-// TODO: Allow moving across the expression with arrow keys.

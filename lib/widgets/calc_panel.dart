@@ -56,8 +56,9 @@ class _CalcPanelState extends State<CalcPanel> {
                                   ),
                                 ),
                               ),
-                              Text(
+                              SelectableText(
                                 provider.calcResultView,
+                                enableInteractiveSelection: true,
                                 style: const TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w300,

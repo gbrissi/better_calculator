@@ -1,6 +1,7 @@
 import 'package:better_calculator/providers/calculator_provider.dart';
 import 'package:better_calculator/providers/custom_colors_provider.dart';
 import 'package:better_calculator/providers/drawer_provider.dart';
+import 'package:better_calculator/providers/history_provider.dart';
 import 'package:better_calculator/providers/tab_provider.dart';
 import 'package:better_calculator/providers/theme_provider.dart';
 import 'package:better_calculator/widgets/calculator.dart';
@@ -17,19 +18,26 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => CalculatorProvider(),
-        ),
-        ChangeNotifierProvider(
           create: (_) => DrawerProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => ThemeProvider(),
         ),
         ChangeNotifierProvider(
+          create: (_) => HistoryProvider(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => TabProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => CustomColorsProvider(),
+        ),
+        ChangeNotifierProxyProvider<HistoryProvider, CalculatorProvider>(
+          create: (_) => CalculatorProvider(),
+          update: (_, firstProvider, secondProvider) {
+            secondProvider!.setHistoryProvider(firstProvider);
+            return secondProvider;
+          },
         ),
       ],
       child: ThemeBuilder(

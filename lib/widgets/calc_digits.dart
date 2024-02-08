@@ -106,7 +106,7 @@ class _CalcDigitsState extends State<CalcDigits> {
             ),
             CalculatorKey(
               logicalKey: LogicalKeyboardKey.backspace,
-              customTapBehavior: _controller.removeLastChar,
+              customTapBehavior: _controller.removeSelectedChar,
               iconRepresentation: FontAwesomeIcons.deleteLeft,
             ),
             CalculatorKey(
