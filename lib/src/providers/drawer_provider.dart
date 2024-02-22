@@ -1,4 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class DrawerProvider extends ChangeNotifier {
@@ -13,18 +14,22 @@ class DrawerProvider extends ChangeNotifier {
   }
 
   void openDrawer() {
-    _setWindowSize(
-      appWindow.size.width * 2,
-    );
+    if (!kIsWeb) {
+      _setWindowSize(
+        appWindow.size.width * 2,
+      );
+    }
 
     _isOpen = true;
     notifyListeners();
   }
 
   void closeDrawer() {
-    _setWindowSize(
-      appWindow.size.width / 2,
-    );
+    if (!kIsWeb) {
+      _setWindowSize(
+        appWindow.size.width / 2,
+      );
+    }
 
     _isOpen = false;
     notifyListeners();

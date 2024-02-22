@@ -1,4 +1,3 @@
-
 import 'package:better_calculator/src/widgets/shell.dart';
 import 'package:better_calculator/src/widgets/side_panel.dart';
 import 'package:flutter/material.dart';
@@ -67,12 +66,11 @@ class _CalculatorState extends State<Calculator> {
                   ],
                 ),
               ),
-              isOpen
-                  ? const Expanded(
-                      child: SidePanel(),
-                    )
-                  : null,
-            ].whereType<Widget>().toList(),
+              if (isOpen)
+                const Expanded(
+                  child: SidePanel(),
+                )
+            ],
           );
         },
       ),

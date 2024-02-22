@@ -1,4 +1,4 @@
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -50,6 +50,19 @@ class _CalculatorKeyState extends State<CalculatorKey> {
 
   void Function() get _onTapBehavior =>
       widget.customTapBehavior ?? _updateExpression;
+
+  void _onTap() {
+    if (kIsWeb) {
+      ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(
+          content: const Text("Feature disabled for web preview (type with keyboard)"),
+          backgroundColor: Colors.red.shade300,
+        ),
+      );
+    } else {
+      _onTapBehavior();
+    }
+  }
 
   void _updateExpression() {
     _controller.addCharactersToCalc(
@@ -106,7 +119,7 @@ class _CalculatorKeyState extends State<CalculatorKey> {
               child: InkWell(
                 key: _inkWellKey,
                 statesController: _inkWellController,
-                onTap: _onTapBehavior,
+                onTap: _onTap,
                 child: Center(
                   child: _getKeyRepresentation(
                     constraints.maxWidth,
