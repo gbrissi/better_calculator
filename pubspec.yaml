@@ -53,6 +53,8 @@ icons_launcher:
       enable: true
     macos:
       enable: true
+    web:
+      enable: true
 
 dev_dependencies:
   flutter_test:
