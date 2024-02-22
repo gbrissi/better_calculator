@@ -30,35 +30,9 @@ class _CalcTextFieldState extends State<CalcTextField> {
     }
   }
 
-  void _listenToKeyArrows(RawKeyEvent event) {
-    if (event is RawKeyDownEvent) {
-      final int baseOffset = _textController.selection.baseOffset;
-      if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-        if (baseOffset > 0) {
-          _textController.selection = TextSelection.collapsed(
-            offset: baseOffset - 1,
-          );
-        }
-      } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-        if (baseOffset < _textController.text.length) {
-          _textController.selection = TextSelection.collapsed(
-            offset: baseOffset + 1,
-          );
-        }
-      }
-    }
-  }
-
   @override
   void initState() {
     _focusNode.addListener(_keepTextFocusedAllTimes);
-
-    if (kIsWeb) {
-      RawKeyboard.instance.addListener(
-        _listenToKeyArrows,
-      );
-    }
-
     super.initState();
   }
 
